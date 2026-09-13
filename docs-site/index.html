@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repair Continuum — Study Methods & Analysis</title>
+<meta name="description" content="Reference index for the N-of-1 study protocol, statistical analysis plan, data infrastructure, and analysis code. Methods only.">
+<style>
+  :root{
+    --bg:#ffffff; --surface:#f6f7f9; --border:#e3e6ea; --text:#14171a; --muted:#5a636c; --accent:#2f6fe0;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){ --bg:#0e1113; --surface:#171b1f; --border:#272d33; --text:#eef1f4; --muted:#9aa4ad; --accent:#5b8dff; }
+  }
+  :root[data-theme="dark"]{ --bg:#0e1113; --surface:#171b1f; --border:#272d33; --text:#eef1f4; --muted:#9aa4ad; --accent:#5b8dff; }
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;margin:0}
+  .wrap{max-width:860px;margin:0 auto;padding:16px}
+  header{padding-block:48px 24px}
+  h1{font-size:clamp(28px,5vw,42px);letter-spacing:-.02em;margin:0 0 10px}
+  .sub{color:var(--muted);max-width:60ch;margin:0}
+  .note{margin:20px 0 8px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:8px;color:var(--muted);font-size:14.5px}
+  h2{font-size:13px;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin:36px 0 12px}
+  ul{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+  a.card{display:block;padding:16px 18px;background:var(--surface);border:1px solid var(--border);border-radius:10px;color:var(--text);text-decoration:none;transition:border-color .15s}
+  a.card:hover{border-color:var(--accent)}
+  a.card .t{font-weight:600}
+  a.card .d{color:var(--muted);font-size:14px;margin-top:3px}
+  footer{color:var(--muted);font-size:13px;padding:40px 0}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:var(--surface);padding:1px 5px;border-radius:4px;border:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Repair Continuum — Study Methods &amp; Analysis</h1>
+    <p class="sub">Reference index for the N-of-1 pilot's pre-registration, statistical analysis plan, data infrastructure, device-QA protocol, and analysis code. <strong>Methods and code only.</strong></p>
+    <div class="note">
+      Unofficial working reference. Not medical advice; not a solicitation. Dosing parameters,
+      route, and administration are out of scope here and require a licensed physician and a
+      sterile-compounding pharmacy. Any second human subject (Cohort 2) requires IRB review.
+    </div>
+  </header>
+
+  <h2>Study protocol</h2>
+  <ul>
+    <li><a class="card" href="https://github.com/ThatMrE/ouroboros/blob/master/study-protocol/01-preregistration.md"><span class="t">Pre-registration</span><div class="d">SCED design, one primary endpoint, randomization &amp; blinding, safety stopping rules</div></a></li>
+    <li><a class="card" href="https://github.com/ThatMrE/ouroboros/blob/master/study-protocol/02-biomarker-analysis-plan.md"><span class="t">Statistical analysis plan</span><div class="d">Randomization-test primary, FDR secondaries, estimation-only exploratory panel</div></a></li>
+    <li><a class="card" href="https://github.com/ThatMrE/ouroboros/blob/master/study-protocol/03-data-infrastructure.md"><span class="t">Data infrastructure</span><div class="d">Append-only capture, data dictionary, sealed allocation, reproducible environment</div></a></li>
+    <li><a class="card" href="https://github.com/ThatMrE/ouroboros/blob/master/study-protocol/04-pod-output-bench-test.md"><span class="t">Pod-output bench test</span><div class="d">Gravimetric delivery-accuracy QA per IEC 60601-2-24 (benign fluid, bench only)</div></a></li>
+    <li><a class="card" href="https://github.com/ThatMrE/ouroboros/blob/master/study-protocol/osf-registration.md"><span class="t">OSF registration form</span><div class="d">Pre-reg mapped to the OSF template, ready to submit</div></a></li>
+  </ul>
+
+  <h2>Analysis code</h2>
+  <ul>
+    <li><a class="card" href="https://github.com/ThatMrE/ouroboros/tree/master/analysis"><span class="t">analysis/</span><div class="d">Seeded allocation, exact randomization test, effect sizes, forest plot, simulated dry run</div></a></li>
+  </ul>
+
+  <footer>
+    Source: <a href="https://github.com/ThatMrE/ouroboros" style="color:var(--accent)">github.com/ThatMrE/ouroboros</a> · Open data on completion, CC-BY-4.0
+  </footer>
+</div>
+</body>
+</html>

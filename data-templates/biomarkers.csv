@@ -1,0 +1,9 @@
+timepoint,week,marker,value,units,loinc,notes
+baseline,0,hs_crp,,mg/L,30522-7,
+baseline,0,il_6,,pg/mL,26881-3,
+baseline,0,vegf,,pg/mL,,
+baseline,0,tgf_b1,,ng/mL,,
+baseline,0,p1np,,ug/L,,
+baseline,0,ctx,,ng/mL,,
+baseline,0,bdnf,,ng/mL,,
+baseline,0,nfl,,pg/mL,,
