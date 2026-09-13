@@ -1,0 +1,6 @@
+# generated / sealed — do not commit
+keys/
+derived/
+__pycache__/
+*.pyc
+data/
