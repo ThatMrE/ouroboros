@@ -1,0 +1,17 @@
+# Serve the Repair Continuum site (its source lives in repair-continuum-site/)
+# at the site root. File-based config takes precedence over the Netlify UI.
+[build]
+  publish = "repair-continuum-site"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+[[headers]]
+  for = "/hero.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
