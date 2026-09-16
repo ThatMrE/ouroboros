@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Repair Continuum — Continuous BPC-157 + TB-500 Microdosing</title>
+<meta name="description" content="A pre-registered N=1 pilot of continuous subcutaneous infusion of BPC-157 and TB-500 — the two peptides ResearchHub named as priority research targets. Open-source infrastructure for decentralized peptide trials.">
+<meta property="og:title" content="Repair Continuum — Continuous BPC-157 + TB-500 Microdosing">
+<meta property="og:description" content="A pre-registered N=1 pilot establishing open-source infrastructure for decentralized peptide trials. From bolus to continuous.">
+<meta property="og:image" content="https://repair-continuum.netlify.app/hero.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   BIOPUNK / REPAIR CONTINUUM — DESIGN TOKENS
+   ============================================ */
+:root {
+  --bg:        #0A0A0A;
+  --surface:   #141414;
+  --surface-2: #1C1C1C;
+  --border:    #2A2A2A;
+  --border-2:  #1F1F1F;
+  --text:      #F5F5F5;
+  --muted:     #888888;
+  --dim:       #5A5A5A;
+  --green:     #39FF14;
+  --green-soft:#86F567;
+  --green-dim: #1E8410;
+  --orange:    #F97316;
+  --orange-dim:#9A4710;
+
+  --display: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  --body:    'Inter', system-ui, -apple-system, sans-serif;
+  --mono:    'JetBrains Mono', ui-monospace, monospace;
+
+  --max:   1280px;
+  --pad-x: clamp(20px, 4vw, 56px);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+}
+
+/* Subtle scanlines, very low opacity — barely there */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    180deg,
+    rgba(255,255,255,0) 0px,
+    rgba(255,255,255,0) 2px,
+    rgba(255,255,255,0.012) 2px,
+    rgba(255,255,255,0.012) 3px
+  );
+  z-index: 1000;
+  mix-blend-mode: overlay;
+}
+
+a { color: var(--green); text-decoration: none; transition: opacity 0.15s; }
+a:hover { opacity: 0.7; }
+
+::selection { background: var(--green); color: var(--bg); }
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.eyebrow--muted { color: var(--muted); }
+
+.display {
+  font-family: var(--display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.04;
+}
+
+.h1 { font-size: clamp(40px, 6.5vw, 84px); }
+.h2 { font-size: clamp(28px, 4vw, 48px); }
+.h3 { font-size: clamp(20px, 2.5vw, 28px); }
+
+p { color: var(--text); }
+.lead { font-size: clamp(16px, 1.4vw, 19px); color: var(--text); max-width: 62ch; line-height: 1.6; }
+.muted { color: var(--muted); }
+.mono { font-family: var(--mono); }
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.wrap {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-left: var(--pad-x);
+  padding-right: var(--pad-x);
+}
+
+section { padding: clamp(70px, 9vw, 130px) 0; position: relative; }
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 56px;
+  max-width: 800px;
+}
+
+.section-meta {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  border: 0;
+  margin: 0;
+}
+
+/* ============================================
+   NAV
+   ============================================ */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  backdrop-filter: blur(16px);
+  background: rgba(10,10,10,0.7);
+  border-bottom: 1px solid var(--border-2);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px var(--pad-x);
+  max-width: var(--max);
+  margin: 0 auto;
+}
+
+.nav__brand {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: var(--text);
+}
+.nav__brand span { color: var(--green); }
+
+.nav__links {
+  display: flex;
+  gap: 28px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.nav__links a { color: var(--muted); }
+.nav__links a:hover { color: var(--green); opacity: 1; }
+
+@media (max-width: 640px) {
+  .nav__links { display: none; }
+}
+
+/* ============================================
+   HERO
+   ============================================ */
+.hero {
+  padding-top: clamp(110px, 14vw, 160px);
+  padding-bottom: clamp(60px, 8vw, 100px);
+  position: relative;
+}
+
+.hero__grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(40px, 5vw, 72px);
+  align-items: center;
+}
+
+@media (max-width: 900px) {
+  .hero__grid { grid-template-columns: 1fr; }
+}
+
+.hero__txt { display: flex; flex-direction: column; gap: 28px; }
+
+.hero__title { color: var(--text); }
+.hero__title em {
+  font-style: normal;
+  color: var(--green);
+  position: relative;
+  display: inline-block;
+}
+
+.hero__sub {
+  font-size: clamp(15px, 1.3vw, 18px);
+  color: var(--muted);
+  max-width: 56ch;
+  line-height: 1.6;
+}
+
+.hero__meta {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 22px 0;
+  margin-top: 8px;
+}
+
+.hero__meta-item { display: flex; flex-direction: column; gap: 6px; }
+.hero__meta-item + .hero__meta-item { border-left: 1px solid var(--border); padding-left: 20px; }
+
+.hero__meta-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+.hero__meta-value {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text);
+}
+.hero__meta-value--green { color: var(--green); }
+
+.hero__cta { display: flex; gap: 14px; flex-wrap: wrap; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 22px;
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn:hover {
+  border-color: var(--green);
+  color: var(--green);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+.btn--primary {
+  background: var(--green);
+  color: var(--bg);
+  border-color: var(--green);
+}
+.btn--primary:hover { background: transparent; color: var(--green); transform: translateY(-1px); }
+.btn__arrow { transition: transform 0.2s; }
+.btn:hover .btn__arrow { transform: translateX(3px); }
+
+.hero__photo {
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  aspect-ratio: 3 / 4;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+}
+.hero__photo img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hero__photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(57,255,20,0.03) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero__photo-tag {
+  position: absolute;
+  bottom: 16px; left: 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--green);
+  background: rgba(10,10,10,0.8);
+  backdrop-filter: blur(8px);
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+}
+
+/* ============================================
+   THESIS / PROBLEM
+   ============================================ */
+.thesis { background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.thesis__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+}
+@media (max-width: 900px) { .thesis__grid { grid-template-columns: 1fr; } }
+
+.thesis__card {
+  padding: 36px 32px;
+  border-right: 1px solid var(--border);
+}
+.thesis__card:last-child { border-right: 0; }
+@media (max-width: 900px) {
+  .thesis__card { border-right: 0; border-bottom: 1px solid var(--border); }
+  .thesis__card:last-child { border-bottom: 0; }
+}
+
+.thesis__num {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--green);
+  letter-spacing: 0.18em;
+  margin-bottom: 14px;
+}
+.thesis__title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 22px;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+.thesis__body { color: var(--muted); font-size: 14.5px; line-height: 1.65; }
+
+/* ============================================
+   COMPOUNDS
+   ============================================ */
+.compounds__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 40px;
+}
+.compounds__grid--two {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 880px;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (max-width: 900px) { .compounds__grid, .compounds__grid--two { grid-template-columns: 1fr; } }
+
+.compound {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: border-color 0.2s;
+}
+.compound:hover { border-color: var(--green-dim); }
+
+.compound__name {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 36px;
+  color: var(--green);
+  letter-spacing: -0.02em;
+}
+.compound__alias {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+.compound__dose {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--orange);
+  margin-top: 4px;
+}
+.compound__moa {
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  margin-top: 8px;
+}
+
+.protocol__meta {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  margin-top: 16px;
+}
+@media (max-width: 700px) { .protocol__meta { grid-template-columns: repeat(2, 1fr); } }
+
+.protocol__meta-item {
+  padding: 22px 20px;
+  border-right: 1px solid var(--border);
+}
+.protocol__meta-item:last-child { border-right: 0; }
+@media (max-width: 700px) {
+  .protocol__meta-item { border-bottom: 1px solid var(--border); }
+  .protocol__meta-item:nth-last-child(-n+1) { border-bottom: 0; }
+  .protocol__meta-item:nth-child(2n) { border-right: 0; }
+}
+.protocol__meta-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 8px;
+}
+.protocol__meta-value {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text);
+}
+
+/* ============================================
+   SCIENCE / CHART
+   ============================================ */
+.science__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+@media (max-width: 900px) { .science__grid { grid-template-columns: 1fr; } }
+
+.chart {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 32px;
+  position: relative;
+}
+.chart__title {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.chart__sub {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 24px;
+}
+.chart svg { width: 100%; height: auto; display: block; }
+
+.chart__legend {
+  display: flex;
+  gap: 24px;
+  margin-top: 18px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+.chart__dot {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.science__points { display: flex; flex-direction: column; gap: 22px; }
+.science__point { display: flex; gap: 18px; }
+.science__point-label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  color: var(--green);
+  font-weight: 700;
+  flex-shrink: 0;
+  width: 110px;
+  padding-top: 2px;
+}
+.science__point-body { color: var(--text); font-size: 14.5px; line-height: 1.6; }
+
+/* ============================================
+   DATA STREAMS
+   ============================================ */
+.streams { display: flex; flex-direction: column; gap: 14px; margin-top: 40px; }
+
+.stream {
+  display: grid;
+  grid-template-columns: 1fr 2fr auto;
+  align-items: center;
+  gap: 32px;
+  padding: 24px 28px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+@media (max-width: 800px) {
+  .stream { grid-template-columns: 1fr; gap: 12px; padding: 22px; }
+}
+
+.stream__left { display: flex; flex-direction: column; gap: 8px; }
+.stream__tag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--green);
+  font-weight: 700;
+}
+.stream__title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 18px;
+}
+.stream__body { color: var(--muted); font-size: 14px; line-height: 1.6; }
+.stream__cadence {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--orange);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+/* ============================================
+   TIMELINE
+   ============================================ */
+.timeline { margin-top: 40px; }
+.timeline__row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+}
+@media (max-width: 700px) { .timeline__row { grid-template-columns: 1fr; } }
+
+.tl {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 26px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+.tl__phase {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: var(--dim);
+}
+.tl__when {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--green);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.tl__title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--text);
+  margin: 4px 0;
+}
+.tl__body { font-size: 13.5px; color: var(--muted); line-height: 1.55; }
+
+/* ============================================
+   BUDGET
+   ============================================ */
+.budget {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  margin-top: 36px;
+}
+.budget__row {
+  display: grid;
+  grid-template-columns: 1.5fr 2.5fr 0.8fr;
+  align-items: center;
+  padding: 18px 28px;
+  gap: 24px;
+  border-bottom: 1px solid var(--border);
+}
+.budget__row:last-child { border-bottom: 0; }
+@media (max-width: 700px) {
+  .budget__row { grid-template-columns: 1fr auto; padding: 16px 20px; gap: 12px; }
+  .budget__row .budget__detail { grid-column: 1 / -1; font-size: 12.5px; }
+}
+.budget__cat {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 15px;
+}
+.budget__detail {
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+.budget__amt {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--green);
+  text-align: right;
+}
+.budget__row--total {
+  background: rgba(57,255,20,0.08);
+  border-top: 1px solid var(--green-dim);
+}
+.budget__row--total .budget__cat { color: var(--green); letter-spacing: 0.04em; }
+.budget__row--total .budget__amt { font-size: 20px; }
+
+/* ============================================
+   ASK
+   ============================================ */
+.ask { text-align: center; padding-bottom: clamp(100px, 12vw, 160px); }
+.ask__amount {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(80px, 14vw, 180px);
+  color: var(--green);
+  line-height: 1;
+  letter-spacing: -0.05em;
+  margin: 30px 0 20px;
+}
+.ask__amount span { color: var(--text); font-size: 0.6em; vertical-align: top; margin-right: 0.05em; }
+
+.ask__line {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: clamp(18px, 2vw, 26px);
+  color: var(--muted);
+  font-style: italic;
+  max-width: 50ch;
+  margin: 0 auto 56px;
+  line-height: 1.4;
+}
+
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 60px;
+  text-align: left;
+}
+@media (max-width: 800px) { .tiers { grid-template-columns: 1fr; } }
+
+.tier {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  padding: 28px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.tier--featured { border-color: var(--green); }
+.tier__amount {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 32px;
+  color: var(--green);
+  letter-spacing: -0.02em;
+}
+.tier__name {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+  font-weight: 700;
+}
+.tier__body { font-size: 14px; color: var(--text); line-height: 1.55; }
+
+.contact-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 40px;
+  border-top: 1px solid var(--border);
+}
+.contact-row a { color: var(--text); }
+.contact-row a:hover { color: var(--green); opacity: 1; }
+.contact-row .dot { color: var(--dim); }
+
+/* ============================================
+   FOOTER
+   ============================================ */
+.footer {
+  border-top: 1px solid var(--border);
+  padding: 36px var(--pad-x);
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--dim);
+}
+
+/* ============================================
+   ANIMATIONS — minimal, on intent
+   Only hide for fade-up when JS is ready (graceful no-JS fallback)
+   ============================================ */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-ready .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.8s ease, transform 0.8s ease; }
+  html.js-ready .fade-up.in { opacity: 1; transform: translateY(0); }
+}
+
+/* Hero photo green pulse — subtle echo of the pump glow */
+@keyframes podPulse {
+  0%, 100% { box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 rgba(57,255,20,0); }
+  50%      { box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 60px rgba(57,255,20,0.08); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero__photo { animation: podPulse 4s ease-in-out infinite; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================
+     NAV
+     ============================================ -->
+<nav class="nav">
+  <div class="nav__inner">
+    <div class="nav__brand">BIOPUNK<span> / / </span>REPAIR CONTINUUM</div>
+    <div class="nav__links">
+      <a href="#protocol">Protocol</a>
+      <a href="#timeline">Timeline</a>
+      <a href="#budget">Budget</a>
+      <a href="#fund">Fund</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================
+     HERO
+     ============================================ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero__grid">
+
+      <div class="hero__txt">
+        <div class="eyebrow">// PROPOSAL  ·  N=1 PILOT  ·  SAN FRANCISCO</div>
+
+        <h1 class="display hero__title h1">
+          From <em>bolus</em><br>
+          to continuous.
+        </h1>
+
+        <p class="hero__sub">
+          A pre-registered N=1 pilot of continuous subcutaneous infusion of
+          BPC-157 and TB-500 — the two peptides ResearchHub named by name as
+          priority research targets. Validates a reproducible open-source platform
+          for decentralized peptide trials.
+        </p>
+
+        <div class="hero__meta">
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Duration</span>
+            <span class="hero__meta-value">90 days</span>
+          </div>
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Subjects</span>
+            <span class="hero__meta-value">N = 1</span>
+          </div>
+          <div class="hero__meta-item">
+            <span class="hero__meta-label">Ask</span>
+            <span class="hero__meta-value hero__meta-value--green">$10,000</span>
+          </div>
+        </div>
+
+        <div class="hero__cta">
+          <a class="btn btn--primary" href="#fund">
+            Fund the pilot <span class="btn__arrow">→</span>
+          </a>
+          <a class="btn" href="#protocol">
+            Read the protocol <span class="btn__arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="hero__photo">
+        <img src="hero.png" alt="Investigator at Biopunk Lab wearing the OmniPod insulin pump delivering BPC-157 + TB-500 continuous infusion, internal reservoir glowing acid green">
+        <span class="hero__photo-tag">SUBJECT 001  ·  T+00:00  ·  ACTIVE</span>
+      </div>
+
+    </div>
+  </div>
+</header>
+
+<!-- ============================================
+     THESIS / PROBLEM
+     ============================================ -->
+<section class="thesis" id="thesis">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">01 // THE PROBLEM</div>
+      <h2 class="display h2">Peptide therapy today is broken.</h2>
+      <p class="lead muted">
+        Three structural failures keep the field in the dark — and the same
+        infrastructure stack solves all three.
+      </p>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="thesis__grid">
+      <div class="thesis__card fade-up">
+        <div class="thesis__num">01</div>
+        <div class="thesis__title">Compliance fails</div>
+        <p class="thesis__body">
+          Self-administered subQ injections require multiple daily doses.
+          Real-world adherence sits at 60–75%. People forget. Schedules slip.
+          Effects become inconsistent across users.
+        </p>
+      </div>
+      <div class="thesis__card fade-up">
+        <div class="thesis__num">02</div>
+        <div class="thesis__title">Pulsatile pharmacokinetics</div>
+        <p class="thesis__body">
+          Bolus injections create plasma peaks and troughs. Tissue repair
+          biology runs continuously — angiogenesis, fibroblast activation,
+          cell migration. Delivery and physiology don't match.
+        </p>
+      </div>
+      <div class="thesis__card fade-up">
+        <div class="thesis__num">03</div>
+        <div class="thesis__title">Every user is a blind N=1</div>
+        <p class="thesis__body">
+          No shared protocols. No biomarker standards. No data infrastructure.
+          Each biohacker running peptides generates data that just dies in
+          private. Zero evidence base accumulates.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     PROTOCOL / COMPOUNDS
+     ============================================ -->
+<section id="protocol">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">02 // THE PROTOCOL</div>
+      <h2 class="display h2">Repair Continuum v1.0</h2>
+      <p class="lead muted">
+        Two tissue-repair peptides at fixed daily ratios, co-formulated in
+        a single 2 mL pod, infused continuously at 0.012 mL/hr with weekly
+        pod changes for 90 days.
+      </p>
+    </div>
+
+    <div class="compounds__grid compounds__grid--two">
+      <div class="compound fade-up">
+        <div class="compound__name">BPC-157</div>
+        <div class="compound__alias">pentadecapeptide  ·  15-aa</div>
+        <div class="compound__dose">500 µg / day</div>
+        <p class="compound__moa">
+          Pro-angiogenic. Activates NOS pathway, drives VEGF-A induction
+          and fibroblast activation. Underwrites tissue formation and vascular repair.
+        </p>
+      </div>
+      <div class="compound fade-up">
+        <div class="compound__name">TB-500</div>
+        <div class="compound__alias">thymosin β4 fragment  ·  17-aa</div>
+        <div class="compound__dose">500 µg / day</div>
+        <p class="compound__moa">
+          Cell migration into the angiogenic field. Actin sequestration.
+          Anti-inflammatory. Native protein is constitutive in plasma —
+          continuous dosing matches physiology.
+        </p>
+      </div>
+    </div>
+
+    <div class="protocol__meta">
+      <div class="protocol__meta-item">
+        <div class="protocol__meta-label">Pump</div>
+        <div class="protocol__meta-value">OmniPod</div>
+      </div>
+      <div class="protocol__meta-item">
+        <div class="protocol__meta-label">Firmware</div>
+        <div class="protocol__meta-value">AAPS v3</div>
+      </div>
+      <div class="protocol__meta-item">
+        <div class="protocol__meta-label">Pod cycle</div>
+        <div class="protocol__meta-value">7 days</div>
+      </div>
+      <div class="protocol__meta-item">
+        <div class="protocol__meta-label">Pod fill</div>
+        <div class="protocol__meta-value">2 mL</div>
+      </div>
+      <div class="protocol__meta-item">
+        <div class="protocol__meta-label">Phase</div>
+        <div class="protocol__meta-value">Open-label</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     SCIENCE / PK CHART
+     ============================================ -->
+<section style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">03 // THE SCIENCE</div>
+      <h2 class="display h2">Continuous beats bolus.</h2>
+      <p class="lead muted">
+        Steady-state plasma concentration outperforms pulsatile dosing across every
+        endpoint that matters — at equivalent or lower total daily dose.
+      </p>
+    </div>
+
+    <div class="science__grid">
+      <div class="chart">
+        <div class="chart__title">FIG. 01  ·  PLASMA PK SIMULATION</div>
+        <div class="chart__sub">Bolus vs continuous infusion · 96 hours</div>
+
+        <svg viewBox="0 0 560 280" xmlns="http://www.w3.org/2000/svg" aria-label="PK simulation chart">
+          <!-- Grid -->
+          <g stroke="#2A2A2A" stroke-width="0.5">
+            <line x1="50" y1="40"  x2="540" y2="40"/>
+            <line x1="50" y1="90"  x2="540" y2="90"/>
+            <line x1="50" y1="140" x2="540" y2="140"/>
+            <line x1="50" y1="190" x2="540" y2="190"/>
+            <line x1="50" y1="240" x2="540" y2="240"/>
+          </g>
+          <!-- Axis labels -->
+          <g font-family="JetBrains Mono, monospace" font-size="9" fill="#5A5A5A">
+            <text x="42" y="44" text-anchor="end">80</text>
+            <text x="42" y="94" text-anchor="end">60</text>
+            <text x="42" y="144" text-anchor="end">40</text>
+            <text x="42" y="194" text-anchor="end">20</text>
+            <text x="42" y="244" text-anchor="end">0</text>
+
+            <text x="50"  y="262" text-anchor="middle">0</text>
+            <text x="172" y="262" text-anchor="middle">24</text>
+            <text x="295" y="262" text-anchor="middle">48</text>
+            <text x="417" y="262" text-anchor="middle">72</text>
+            <text x="540" y="262" text-anchor="middle">96 hr</text>
+          </g>
+
+          <!-- Bolus curve (orange) — 4 spikes at 0, 24, 48, 72 -->
+          <path
+            d="M 50,240 L 50,55 Q 60,55 65,80 Q 90,160 172,240 L 172,55 Q 182,55 187,80 Q 212,160 294,240 L 294,55 Q 304,55 309,80 Q 334,160 416,240 L 416,55 Q 426,55 431,80 Q 456,160 540,240"
+            stroke="#F97316" stroke-width="2" fill="none" stroke-linejoin="round"/>
+
+          <!-- Continuous curve (green) — ramps to plateau -->
+          <path
+            d="M 50,240 Q 70,240 90,180 Q 110,140 150,140 L 540,140"
+            stroke="#39FF14" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+
+          <!-- Therapeutic window shading (very subtle) -->
+          <rect x="50" y="115" width="490" height="50" fill="#39FF14" opacity="0.04"/>
+          <text x="535" y="112" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#39FF14" opacity="0.7">therapeutic window</text>
+        </svg>
+
+        <div class="chart__legend">
+          <span><span class="chart__dot" style="background:#F97316"></span>Daily bolus</span>
+          <span><span class="chart__dot" style="background:#39FF14"></span>Continuous infusion</span>
+        </div>
+      </div>
+
+      <div class="science__points">
+        <div class="science__point">
+          <div class="science__point-label">STEADY-STATE</div>
+          <div class="science__point-body">No peaks, no troughs. Receptor occupancy stays in the therapeutic window 24/7 instead of spiking and crashing.</div>
+        </div>
+        <div class="science__point">
+          <div class="science__point-label">LOWER DOSE</div>
+          <div class="science__point-body">Equivalent biological effect at 40–60% of typical bolus dose, because no plasma sub-therapeutic windows.</div>
+        </div>
+        <div class="science__point">
+          <div class="science__point-label">FEWER S/E</div>
+          <div class="science__point-body">Peak-associated side effects — flushing, headache, GI — eliminated when kinetics flatten.</div>
+        </div>
+        <div class="science__point">
+          <div class="science__point-label">MATCHES BIO</div>
+          <div class="science__point-body">Native thymosin β4 is constitutively present in plasma. Angiogenesis and fibroblast activation are continuous-state processes — pumps mimic physiology.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     DATA STREAMS
+     ============================================ -->
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">04 // MEASUREMENT</div>
+      <h2 class="display h2">Measure everything. Share everything.</h2>
+      <p class="lead muted">
+        Four data streams, five timepoints, full pre-registration, open dataset
+        on completion regardless of outcome.
+      </p>
+    </div>
+
+    <div class="streams">
+      <div class="stream fade-up">
+        <div class="stream__left">
+          <div class="stream__tag">OBJECTIVE</div>
+          <div class="stream__title">Biomarker panels</div>
+        </div>
+        <p class="stream__body">
+          BDNF, NfL, hsCRP, IL-6, TGF-β1, VEGF, P1NP, CTX, hyaluronic acid, CK.
+          Standard safety panels (CMP, CBC, LFTs). CANTAB cognitive testing at
+          three timepoints.
+        </p>
+        <div class="stream__cadence">WEEK 0, 4, 8, 12, 16</div>
+      </div>
+
+      <div class="stream fade-up">
+        <div class="stream__left">
+          <div class="stream__tag">FUNCTIONAL</div>
+          <div class="stream__title">Stressor recovery test</div>
+        </div>
+        <p class="stream__body">
+          Standardized eccentric quad protocol (5×10 max-effort reps). CK
+          time-course at +24/48/72 hours. Pre-trial vs Week 12 comparison —
+          a hard-to-fake functional readout of repair capacity.
+        </p>
+        <div class="stream__cadence">WEEK 0 + WEEK 12</div>
+      </div>
+
+      <div class="stream fade-up">
+        <div class="stream__left">
+          <div class="stream__tag">CONTINUOUS</div>
+          <div class="stream__title">Wearable telemetry</div>
+        </div>
+        <p class="stream__body">
+          HRV (RMSSD), sleep architecture (deep/REM/total/efficiency), resting heart
+          rate, daily activity. Garmin or Whoop + Oura ring for redundancy. Raw data
+          exported and versioned.
+        </p>
+        <div class="stream__cadence">DAILY · 120 DAYS</div>
+      </div>
+
+      <div class="stream fade-up">
+        <div class="stream__left">
+          <div class="stream__tag">SUBJECTIVE</div>
+          <div class="stream__title">Daily journal</div>
+        </div>
+        <p class="stream__body">
+          1–10 ratings for energy, recovery, sleep quality, focus, mood. Free-text
+          notes. Photo log of injection sites. Captured digitally with timestamps.
+        </p>
+        <div class="stream__cadence">DAILY · 120 DAYS</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     TIMELINE
+     ============================================ -->
+<section style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);" id="timeline">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">05 // TIMELINE</div>
+      <h2 class="display h2">Six months, end-to-end.</h2>
+      <p class="lead muted">
+        From baseline draw to published cohort-2 protocol — every milestone produces
+        a public deliverable.
+      </p>
+    </div>
+
+    <div class="timeline">
+      <div class="timeline__row">
+        <div class="tl fade-up">
+          <div class="tl__phase">PHASE 1</div>
+          <div class="tl__when">MONTH 0</div>
+          <div class="tl__title">Setup</div>
+          <p class="tl__body">Pump procurement. Pharmacy onboarding. Baseline biomarker panel. Wearable calibration.</p>
+        </div>
+        <div class="tl fade-up">
+          <div class="tl__phase">PHASE 2</div>
+          <div class="tl__when">MONTHS 1–3</div>
+          <div class="tl__title">90-day trial</div>
+          <p class="tl__body">Continuous infusion. Daily logging. Weekly check-ins. Biomarker draws at Week 4, 8, 12.</p>
+        </div>
+        <div class="tl fade-up">
+          <div class="tl__phase">PHASE 3</div>
+          <div class="tl__when">MONTH 4</div>
+          <div class="tl__title">Analysis</div>
+          <p class="tl__body">Statistical analysis per pre-registered plan. Manuscript draft. Protocol v2 decision tree.</p>
+        </div>
+        <div class="tl fade-up">
+          <div class="tl__phase">PHASE 4</div>
+          <div class="tl__when">MONTHS 5–6</div>
+          <div class="tl__title">Open + recruit</div>
+          <p class="tl__body">Open-source full protocol, data, code. Publish writeup. Recruit cohort 2 (N=10).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     BUDGET
+     ============================================ -->
+<section id="budget">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">06 // BUDGET</div>
+      <h2 class="display h2">$10,000 total ask.</h2>
+      <p class="lead muted">
+        Itemized. Research-grade peptides with independent HPLC verification. Compounded
+        sterile formulation and Cohort 2 are crowdfunding stretch goals.
+      </p>
+    </div>
+
+    <div class="budget">
+      <div class="budget__row">
+        <div class="budget__cat">Equipment</div>
+        <div class="budget__detail">OmniPod Dash kit + 15 pods (7-day cycle × 90 days) + sterile supplies</div>
+        <div class="budget__amt">$2,500</div>
+      </div>
+      <div class="budget__row">
+        <div class="budget__cat">Peptides + QC</div>
+        <div class="budget__detail">Research-grade BPC-157 + TB-500 + per-lot independent HPLC identity/purity verification</div>
+        <div class="budget__amt">$1,500</div>
+      </div>
+      <div class="budget__row">
+        <div class="budget__cat">Lab panels (5x)</div>
+        <div class="budget__detail">Baseline + Weeks 4, 8, 12, 16 — including BDNF, NfL, TGF-β1, VEGF, cytokine and bone-turnover markers</div>
+        <div class="budget__amt">$3,500</div>
+      </div>
+      <div class="budget__row">
+        <div class="budget__cat">Wearables + software</div>
+        <div class="budget__detail">Oura ring + Whoop subscription, AAPS setup, CANTAB cognitive testing platform</div>
+        <div class="budget__amt">$1,100</div>
+      </div>
+      <div class="budget__row">
+        <div class="budget__cat">Documentation</div>
+        <div class="budget__detail">Publication fees, statistical software, analysis tools</div>
+        <div class="budget__amt">$400</div>
+      </div>
+      <div class="budget__row">
+        <div class="budget__cat">Contingency</div>
+        <div class="budget__detail">Reformulation, retests, replacement supplies</div>
+        <div class="budget__amt">$1,000</div>
+      </div>
+      <div class="budget__row budget__row--total">
+        <div class="budget__cat">TOTAL</div>
+        <div class="budget__detail"></div>
+        <div class="budget__amt">$10,000</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     ASK
+     ============================================ -->
+<section class="ask" id="fund">
+  <div class="wrap">
+    <div class="eyebrow eyebrow--muted">07 // PARTICIPATE</div>
+
+    <div class="ask__amount"><span>$</span>15K</div>
+
+    <p class="ask__line">
+      $10K seed plus $5K in crowdfunding stretch unlocks expanded biomarker
+      depth, deeper analytical characterization, and Cohort 2 readiness.
+    </p>
+
+    <div class="tiers">
+      <div class="tier fade-up">
+        <div class="tier__amount">$500</div>
+        <div class="tier__name">OBSERVER</div>
+        <p class="tier__body">
+          Quarterly data updates. Name in the published writeup. Access to the
+          anonymized dataset on release.
+        </p>
+      </div>
+      <div class="tier tier--featured fade-up">
+        <div class="tier__amount">$2,500</div>
+        <div class="tier__name">CONTRIBUTOR</div>
+        <p class="tier__body">
+          Everything above. Co-author credit on the manuscript. One-hour protocol
+          consultation. Priority enrollment for Cohort 2.
+        </p>
+      </div>
+      <div class="tier fade-up">
+        <div class="tier__amount">$10,000+</div>
+        <div class="tier__name">PARTNER</div>
+        <p class="tier__body">
+          Everything above. Co-design Cohort 2 protocol. Quarterly strategy calls.
+          Optional anonymized featuring at Biopunk events.
+        </p>
+      </div>
+    </div>
+
+    <div class="contact-row">
+      <a href="mailto:elliot@biopunklab.com">elliot@biopunklab.com</a>
+      <span class="dot">·</span>
+      <span>Biopunk Lab</span>
+      <span class="dot">·</span>
+      <span>San Francisco</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================
+     FOOTER
+     ============================================ -->
+<footer class="footer">
+  BIOPUNK LAB  //  REPAIR CONTINUUM v1.0  //  PRE-REGISTERED ON RESEARCHHUB  //  TRACK 2  //  OPEN DATA · CC-BY-4.0
+</footer>
+
+<!-- ============================================
+     SCROLL FADE-UP
+     ============================================ -->
+<script>
+(function() {
+  document.documentElement.classList.add('js-ready');
+  if (!('IntersectionObserver' in window)) {
+    document.querySelectorAll('.fade-up').forEach(el => el.classList.add('in'));
+    return;
+  }
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+})();
+</script>
+
+</body>
+</html>
