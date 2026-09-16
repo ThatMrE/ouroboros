@@ -11,6 +11,7 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ouroboros-dose.netlify.app/">
 <link rel="canonical" href="https://ouroboros-dose.netlify.app/">
+<link rel="icon" type="image/svg+xml" href="ouroboros.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -747,6 +748,18 @@ section { padding: clamp(70px, 9vw, 130px) 0; position: relative; }
 @media (prefers-reduced-motion: no-preference) {
   .hero__photo { animation: podPulse 4s ease-in-out infinite; }
 }
+
+.nav__brand { display: flex; align-items: center; }
+.nav__logo  { width: 22px; height: 22px; margin-right: 10px; display: block; }
+.loop__figure { display: flex; justify-content: center; margin: 4px 0 44px; }
+.loop__mark { width: clamp(150px, 24vw, 230px); height: auto; }
+@keyframes ringGlow {
+  0%, 100% { filter: drop-shadow(0 0 22px rgba(57,255,20,0.10)); }
+  50%      { filter: drop-shadow(0 0 46px rgba(57,255,20,0.22)); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .loop__mark { animation: ringGlow 6s ease-in-out infinite; }
+}
 </style>
 </head>
 <body>
@@ -756,7 +769,7 @@ section { padding: clamp(70px, 9vw, 130px) 0; position: relative; }
      ============================================ -->
 <nav class="nav">
   <div class="nav__inner">
-    <div class="nav__brand">BIOPUNK<span> / / </span>OUROBOROS</div>
+    <div class="nav__brand"><img class="nav__logo" src="ouroboros.svg" alt="">BIOPUNK<span> / / </span>OUROBOROS</div>
     <div class="nav__links">
       <a href="#loop">The Loop</a>
       <a href="#protocol">Protocol</a>
@@ -827,6 +840,9 @@ section { padding: clamp(70px, 9vw, 130px) 0; position: relative; }
      ============================================ -->
 <section id="loop">
   <div class="wrap">
+    <div class="loop__figure">
+      <img class="loop__mark" src="ouroboros.svg" alt="Ouroboros — a serpent biting its own tail, drawn as a monitoring dial">
+    </div>
     <div class="section-head">
       <div class="eyebrow">00 // THE EMBLEM</div>
       <h2 class="display h2">The serpent that closes the loop.</h2>
